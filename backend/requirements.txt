@@ -13,3 +13,5 @@ easyocr
 opencv-python-headless
 reportlab
 Pillow
+qrcode
+requests
