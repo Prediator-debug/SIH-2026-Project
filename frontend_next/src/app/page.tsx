@@ -182,7 +182,7 @@ export default function LandingPage() {
 
   return (
     <div
-      className={`min-h-screen bg-[#F8F9FA] text-slate-900 font-sans selection:bg-[#0B2559] selection:text-white ${fontSizeScale === "sm" ? "text-sm" : fontSizeScale === "lg" ? "text-lg" : "text-base"
+      className={`min-h-screen w-full overflow-x-hidden bg-[#F8F9FA] text-slate-900 font-sans selection:bg-[#0B2559] selection:text-white ${fontSizeScale === "sm" ? "text-sm" : fontSizeScale === "lg" ? "text-lg" : "text-base"
         }`}
     >
       {/* ========================================================================= */}
