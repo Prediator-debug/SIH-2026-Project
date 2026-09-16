@@ -48,7 +48,7 @@ export default function DashboardLayout({
   const pathname = usePathname();
   const router = useRouter();
   const { lang: currentLang, changeLanguage, t } = useLanguage();
-  const { user: authUser, logout } = useAuth();
+  const { user: authUser, logout, loading: authLoading } = useAuth();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
@@ -59,15 +59,11 @@ export default function DashboardLayout({
   const [offlineCount, setOfflineCount] = useState(0);
   const [isSyncing, setIsSyncing] = useState(false);
 
-  const [localUser, setLocalUser] = useState<any>(null);
   const profileRef = useRef<HTMLDivElement>(null);
 
-  // Read authenticated user state & language
+  // Read language and check offline state
   useEffect(() => {
     try {
-      const stored = localStorage.getItem("user");
-      if (stored) setLocalUser(JSON.parse(stored));
-
       const langStored = localStorage.getItem("lmd_lang") as any;
       if (langStored) changeLanguage(langStored);
 
@@ -77,12 +73,23 @@ export default function DashboardLayout({
     }
   }, []);
 
-  const currentUser = authUser || localUser || {
-    email: "user@lmd.gov.in",
-    role: "officer",
-    name: "Enforcement Officer",
-    badge: "LMD-OFFICER"
-  };
+  const currentUser = authUser;
+
+  // Enforce Real Authentication
+  useEffect(() => {
+    if (!authLoading && !currentUser) {
+      router.push('/login');
+    }
+  }, [authLoading, currentUser, router]);
+
+  // Show loading spinner while checking auth, or if redirecting
+  if (authLoading || !currentUser) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-[#F8F9FA]">
+        <div className="w-10 h-10 border-4 border-[#0B2559] border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
 
   // Monitor online/offline status and pending offline queue count
   const checkOfflineCount = () => {
@@ -141,19 +148,18 @@ export default function DashboardLayout({
   const isUser = currentUser?.role === "user" || currentUser?.email?.toLowerCase().startsWith("user") || currentUser?.email?.toLowerCase().startsWith("consumer");
 
   const officerNavItems = [
-    { name: "Main Home Page", href: '/', icon: Home },
+    { name: t('main_home_page'), href: '/', icon: Home },
     { name: t('dashboard'), href: '/dashboard', icon: LayoutDashboard },
     { name: t('new_scan'), href: '/scan', icon: ScanLine },
     { name: t('ecommerce_check'), href: '/ecommerce', icon: ShoppingBag },
     { name: t('products'), href: '/products', icon: Package },
-    { name: t('consumer_portal'), href: '/consumer', icon: Users },
     { name: t('inspections'), href: '/inspections', icon: ClipboardList },
     { name: t('reports'), href: '/reports', icon: FileText },
     { name: t('risk_analytics'), href: '/analytics', icon: BarChart3 },
   ];
 
   const userNavItems = [
-    { name: "Main Home Page", href: '/', icon: Home },
+    { name: t('main_home_page'), href: '/', icon: Home },
     { name: t('new_scan'), href: '/scan', icon: ScanLine },
     { name: t('ecommerce_check'), href: '/ecommerce', icon: ShoppingBag },
     { name: t('products'), href: '/products', icon: Package },
@@ -225,13 +231,13 @@ export default function DashboardLayout({
             {!isCollapsed && (
               <div className="flex flex-col justify-center leading-tight">
                 <span className="font-extrabold text-xs tracking-tight text-[#0B2559] leading-snug">
-                  Packaged Commodities
+                  {t('packaged_commodities')}
                 </span>
                 <span className="font-black text-[11px] text-[#0B2559] tracking-tight">
-                  Compliance Portal
+                  {t('compliance_portal')}
                 </span>
                 <span className="text-[9px] text-gray-500 tracking-wider font-semibold uppercase mt-0.5">
-                  Dept of Consumer Affairs • Govt of India
+                  {t('dept_govt_india')}
                 </span>
               </div>
             )}
@@ -246,10 +252,10 @@ export default function DashboardLayout({
               "flex items-center gap-2.5 px-3 py-2 rounded-xl bg-[#0B2559] hover:bg-[#07193d] text-white font-extrabold text-xs shadow-sm transition-all group",
               isCollapsed ? "justify-center" : ""
             )}
-            title="Return to Main Portal (Home)"
+            title={t('go_to_home_page')}
           >
             <Home className="w-4 h-4 shrink-0 text-amber-400 group-hover:scale-110 transition-transform" />
-            {!isCollapsed && <span>Go to Home Page</span>}
+            {!isCollapsed && <span>{t('go_to_home_page')}</span>}
           </Link>
         </div>
 
@@ -327,12 +333,12 @@ export default function DashboardLayout({
                   <WifiOff className="w-3.5 h-3.5 text-rose-600 animate-pulse" />
                 )}
                 <span className={clsx("font-bold text-[11px]", isOnline ? "text-emerald-700" : "text-rose-600")}>
-                  {isOnline ? "Network Online" : "Offline Field Mode"}
+                  {isOnline ? t('network_online') : t('offline_field_mode')}
                 </span>
               </div>
               {offlineCount > 0 && (
                 <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-900 border border-amber-300">
-                  {offlineCount} Pending
+                  {offlineCount} {t('pending')}
                 </span>
               )}
             </div>
@@ -345,7 +351,7 @@ export default function DashboardLayout({
                 className="w-full mt-2 py-1.5 px-2.5 rounded-lg bg-[#0B2559] hover:bg-[#07193d] text-white font-extrabold text-[11px] flex items-center justify-center gap-1.5 shadow-xs transition-all"
               >
                 <RefreshCw className={clsx("w-3 h-3 text-amber-400", isSyncing ? "animate-spin" : "")} />
-                {isSyncing ? "Syncing Batch..." : "Sync Offline Queue"}
+                {isSyncing ? t('syncing_batch') : t('sync_offline_queue')}
               </button>
             )}
           </div>
@@ -396,7 +402,7 @@ export default function DashboardLayout({
                       : "text-blue-900 bg-blue-50 border-blue-200"
                   )}>
                     <span className={clsx("w-1.5 h-1.5 rounded-full animate-pulse", isAdmin ? "bg-purple-600" : isUser ? "bg-emerald-600" : "bg-[#0B2559]")} />
-                    {isAdmin ? "Super-Admin" : isUser ? "Citizen User" : "On Duty"}
+                    {isAdmin ? t('super_admin') : isUser ? t('citizen_user') : t('on_duty')}
                   </span>
                 </div>
               </div>
@@ -412,7 +418,7 @@ export default function DashboardLayout({
                     className="w-full flex items-center gap-2.5 px-3 py-2 text-slate-700 hover:text-[#0B2559] hover:bg-gray-100 rounded-xl transition-colors font-semibold text-left"
                   >
                     <Award className="w-4 h-4 text-[#0B2559] shrink-0" />
-                    <span>View Official Officer ID Card</span>
+                    <span>{t('view_officer_id')}</span>
                   </button>
                 )}
 
@@ -423,7 +429,7 @@ export default function DashboardLayout({
                     className="flex items-center gap-2.5 px-3 py-2 text-emerald-800 hover:bg-emerald-50 rounded-xl transition-colors font-bold"
                   >
                     <Users className="w-4 h-4 text-emerald-600 shrink-0" />
-                    <span>Consumer Complaints &amp; Verification</span>
+                    <span>{t('consumer_complaints_verification')}</span>
                   </Link>
                 )}
 
@@ -434,7 +440,7 @@ export default function DashboardLayout({
                     className="flex items-center gap-2.5 px-3 py-2 text-slate-700 hover:text-[#0B2559] hover:bg-gray-100 rounded-xl transition-colors font-semibold"
                   >
                     <ClipboardList className="w-4 h-4 text-[#0B2559] shrink-0" />
-                    <span>My Inspection Logs</span>
+                    <span>{t('my_inspection_logs')}</span>
                   </Link>
                 )}
 
@@ -445,7 +451,7 @@ export default function DashboardLayout({
                     className="flex items-center gap-2.5 px-3 py-2 text-purple-800 hover:bg-purple-50 rounded-xl transition-colors font-bold"
                   >
                     <Settings className="w-4 h-4 text-purple-600 shrink-0" />
-                    <span>Admin Terminal &amp; Rules</span>
+                    <span>{t('admin_terminal_rules')}</span>
                   </Link>
                 )}
               </div>
@@ -457,7 +463,7 @@ export default function DashboardLayout({
                   className="w-full flex items-center gap-2.5 px-3 py-2 text-rose-700 hover:text-rose-900 hover:bg-rose-50 rounded-xl transition-colors font-bold text-left group"
                 >
                   <LogOut className="w-4 h-4 text-rose-600 group-hover:-translate-x-0.5 transition-transform shrink-0" />
-                  <span>Sign Out of Platform</span>
+                  <span>{t('sign_out_platform')}</span>
                 </button>
               </div>
             </div>
@@ -532,11 +538,11 @@ export default function DashboardLayout({
             </button>
             <div className="flex items-center gap-2 sm:gap-3">
               <span className="font-extrabold text-[#0B2559] text-xs sm:text-sm tracking-tight">
-                Department of Consumer Affairs
+                {t('dept_consumer_affairs')}
               </span>
               <span className="hidden sm:inline text-xs text-gray-300 font-medium">|</span>
               <span className="hidden md:inline text-xs text-[#0B2559] font-bold">
-                Packaged Commodities Compliance Portal
+                {t('packaged_commodities_compliance_portal')}
               </span>
             </div>
           </div>
@@ -546,10 +552,10 @@ export default function DashboardLayout({
               <button
                 onClick={() => setIsIdModalOpen(true)}
                 className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gray-100 border border-gray-300 text-slate-700 hover:bg-gray-200 text-xs font-semibold transition"
-                title="View Official Officer ID Card"
+                title={t('officer_id')}
               >
                 <Award className="w-3.5 h-3.5 text-[#0B2559]" />
-                <span>Officer ID</span>
+                <span>{t('officer_id')}</span>
               </button>
             )}
 
@@ -558,7 +564,7 @@ export default function DashboardLayout({
               className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-[#0B2559] hover:bg-[#07193d] text-white text-xs font-extrabold shadow-sm transition-all"
             >
               <Home className="w-3.5 h-3.5 text-amber-400" />
-              <span>Go to Home</span>
+              <span>{t('go_to_home')}</span>
             </Link>
           </div>
         </header>
@@ -582,10 +588,10 @@ export default function DashboardLayout({
                 </div>
                 <div>
                   <h3 className="font-extrabold text-[#0B2559] text-base tracking-wide uppercase">
-                    Department of Consumer Affairs
+                    {t('dept_consumer_affairs')}
                   </h3>
                   <p className="text-[10px] font-bold text-amber-700 tracking-wider uppercase">
-                    Legal Metrology Department • Govt. of India
+                    {t('lmd_govt_india')}
                   </p>
                 </div>
               </div>
@@ -617,25 +623,25 @@ export default function DashboardLayout({
 
               <div className="grid grid-cols-2 gap-3 text-xs">
                 <div className="p-3 rounded-xl bg-gray-50 border border-gray-200">
-                  <span className="text-[10px] text-gray-500 block uppercase font-semibold">Posting Circle / Jurisdiction</span>
+                  <span className="text-[10px] text-gray-500 block uppercase font-semibold">{t('posting_jurisdiction')}</span>
                   <span className="font-bold text-gray-900 truncate block">
                     {currentUser?.jurisdiction || currentUser?.officerDetails?.jurisdictionZone || (isAdmin ? "All-India Central HQ" : "NCR & Northern Zone")}
                   </span>
                 </div>
                 <div className="p-3 rounded-xl bg-gray-50 border border-gray-200">
-                  <span className="text-[10px] text-gray-500 block uppercase font-semibold">Statutory Warrant</span>
+                  <span className="text-[10px] text-gray-500 block uppercase font-semibold">{t('statutory_warrant')}</span>
                   <span className="font-bold text-emerald-700 truncate block">
                     {currentUser?.statutoryAuthority || currentUser?.officerDetails?.warrantSection || (isAdmin ? "Section 52 Rules Power" : "Section 15, LM Act 2009")}
                   </span>
                 </div>
                 <div className="p-3 rounded-xl bg-gray-50 border border-gray-200">
-                  <span className="text-[10px] text-gray-500 block uppercase font-semibold">Govt Employee / HRMS Code</span>
+                  <span className="text-[10px] text-gray-500 block uppercase font-semibold">{t('hrms_code')}</span>
                   <span className="font-mono text-[#0B2559] font-bold truncate block">
                     {currentUser?.employeeCode || currentUser?.officerDetails?.employeeCode || "GOI-EMP-784920"}
                   </span>
                 </div>
                 <div className="p-3 rounded-xl bg-gray-50 border border-gray-200">
-                  <span className="text-[10px] text-gray-500 block uppercase font-semibold">Official Phone (Field 2FA)</span>
+                  <span className="text-[10px] text-gray-500 block uppercase font-semibold">{t('official_phone')}</span>
                   <span className="font-mono text-[#0B2559] font-bold truncate block">
                     {currentUser?.officialPhone || currentUser?.officerDetails?.officialPhone || "+91 98765 43210"}
                   </span>
@@ -646,12 +652,12 @@ export default function DashboardLayout({
                 <div className="flex items-center gap-2 text-slate-800">
                   <Fingerprint className="w-5 h-5 text-[#0B2559] shrink-0" />
                   <div>
-                    <span className="font-bold text-[#0B2559] block">Digital Signature Verified</span>
+                    <span className="font-bold text-[#0B2559] block">{t('digital_signature_verified')}</span>
                     <span className="font-mono text-[9px] text-gray-500">SHA-256: 7A1B...8C90</span>
                   </div>
                 </div>
                 <span className="text-[10px] font-bold text-emerald-800 bg-emerald-100 px-2.5 py-1 rounded-full border border-emerald-300">
-                  VALID TILL 2028
+                  {t('valid_till')}
                 </span>
               </div>
             </div>
@@ -661,7 +667,7 @@ export default function DashboardLayout({
                 onClick={() => setIsIdModalOpen(false)}
                 className="w-full py-3 rounded-xl bg-[#0B2559] hover:bg-[#07193d] font-bold text-white text-xs transition-all shadow-md active:scale-[0.99]"
               >
-                Close Credential Card
+                {t('close_credential_card')}
               </button>
             </div>
           </div>
