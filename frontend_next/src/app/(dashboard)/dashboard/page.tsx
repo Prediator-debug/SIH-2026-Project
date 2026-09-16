@@ -77,6 +77,8 @@ export default function DashboardPage() {
   const categoryData = data?.category_data || [];
   const recentScans = data?.recent_scans || [];
 
+  const hasViolations = violationTypes.some((v: any) => v.count > 0);
+
   const stats = [
     {
       title: t('total_inspections'),
@@ -265,11 +267,11 @@ export default function DashboardPage() {
         {/* Violation Breakdown Donut Chart */}
         <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm flex flex-col">
           <div className="mb-4">
-            <h2 className="text-lg font-bold text-[#0B2559]">{t('statutory_infractions')}</h2>
+            <h2 className="text-lg font-bold text-[#0B2559]">{t('top_rule_violations')}</h2>
             <p className="text-xs text-gray-600 mt-0.5 font-medium">{t('violations_logged_rule')}</p>
           </div>
 
-          {violationTypes.length > 0 ? (
+          {hasViolations ? (
             <>
               <div className="h-[220px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
