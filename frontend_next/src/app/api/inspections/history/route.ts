@@ -54,18 +54,13 @@ export async function GET(request: Request) {
       timeoutMs: 4000,
     });
 
-    if (res.ok) {
-      const data = await res.json();
-      return NextResponse.json(data);
+    if (!res.ok) {
+      return NextResponse.json({ error: 'Failed to fetch history from backend' }, { status: res.status });
     }
-  } catch (error: any) {
-    console.warn('Backend inspections/history unreachable, returning fallback list:', error?.message || error);
-  }
 
-  // Graceful fallback list
-  return NextResponse.json({
-    total_records: FALLBACK_INSPECTIONS.length,
-    inspections: FALLBACK_INSPECTIONS,
-    fallback: true
-  });
+    const data = await res.json();
+    return NextResponse.json(data);
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
 }
