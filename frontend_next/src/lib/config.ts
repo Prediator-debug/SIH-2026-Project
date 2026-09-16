@@ -8,7 +8,7 @@ export const config = {
   backendApiUrl: 
     process.env.BACKEND_API_URL || 
     process.env.NEXT_PUBLIC_BACKEND_API_URL || 
-    'http://127.0.0.1:8000',
+    (process.env.NODE_ENV === 'production' ? 'https://sih-2026-project-bpsy.onrender.com' : 'http://127.0.0.1:8000'),
 
   // Gemini AI Key
   geminiApiKey: process.env.GEMINI_API_KEY || '',
