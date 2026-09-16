@@ -22,6 +22,7 @@ import {
   Phone,
   CheckCircle2,
   X,
+  Menu,
   Sparkles,
   ExternalLink,
   Barcode,
@@ -36,10 +37,12 @@ import {
   RotateCcw
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function LandingPage() {
   const router = useRouter();
   const { user, logout } = useAuth();
+  const { lang, changeLanguage, t } = useLanguage();
 
 
 
@@ -47,8 +50,8 @@ export default function LandingPage() {
   const [fontSizeScale, setFontSizeScale] = useState<"sm" | "normal" | "lg">("normal");
 
   // Language Dropdown
-  const [language, setLanguage] = useState<string>("English");
   const [langDropdownOpen, setLangDropdownOpen] = useState<boolean>(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
 
   // Search input in navbar
   const [navSearchQuery, setNavSearchQuery] = useState<string>("");
@@ -186,9 +189,9 @@ export default function LandingPage() {
       {/* 1. TOP UTILITY BAR                                                        */}
       {/* ========================================================================= */}
       <header className="bg-white border-b border-gray-200 sticky top-0 z-40 shadow-xs">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 flex items-center justify-between gap-4">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-2.5 flex items-center justify-between gap-2 sm:gap-4">
           {/* Left: Emblem & Official Department Text Stack */}
-          <div className="flex items-center gap-3.5 shrink-0">
+          <div className="flex items-center gap-2 sm:gap-3.5 shrink-0 min-w-0">
             <div className="relative h-12 w-9 sm:h-14 sm:w-10 shrink-0 flex items-center justify-center">
               <Image
                 src="/portal/emblem_official.png"
@@ -196,19 +199,20 @@ export default function LandingPage() {
                 width={40}
                 height={68}
                 className="w-full h-full object-contain"
+                style={{ width: "auto", height: "auto" }}
                 priority
                 unoptimized
               />
             </div>
-            <div className="flex flex-col justify-center leading-tight">
-              <span className="font-extrabold text-[#0B2559] text-[12px] sm:text-[14px] tracking-tight">
-                Department of Consumer Affairs
+            <div className="flex flex-col justify-center leading-tight truncate">
+              <span className="font-extrabold text-[#0B2559] text-[11px] sm:text-[14px] tracking-tight truncate">
+                {t('dept_consumer_affairs')}
               </span>
-              <span className="text-[10px] sm:text-[11px] text-gray-600 font-medium mt-0.5">
-                Ministry of Consumer Affairs, Food &amp; Public Distribution
+              <span className="hidden sm:block text-[10px] sm:text-[11px] text-gray-600 font-medium mt-0.5 truncate">
+                {t('ministry_consumer_affairs')}
               </span>
-              <span className="text-[9px] sm:text-[10px] text-gray-500 font-medium">
-                Government of India
+              <span className="hidden sm:block text-[9px] sm:text-[10px] text-gray-500 font-medium truncate">
+                {t('govt_of_india')}
               </span>
             </div>
           </div>
@@ -216,17 +220,17 @@ export default function LandingPage() {
           {/* Center: Portal Title & Tagline */}
           <div className="text-center hidden lg:block px-2 shrink-0">
             <h1 className="text-base lg:text-lg font-black text-[#0B2559] tracking-tight">
-              Packaged Commodities Compliance Portal
+              {t('portal_title')}
             </h1>
             <p className="text-[10px] lg:text-[11px] text-gray-600 italic font-serif mt-0.5">
-              Transparent Weights. Trusted Consumers. Stronger India.
+              {t('portal_tagline')}
             </p>
           </div>
 
-          {/* Right: Accessibility Controls, Language, Login & G20 Logo */}
-          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-            {/* Accessibility Buttons (A- / A / A+) */}
-            <div className="flex items-center border border-gray-300 rounded-md overflow-hidden bg-gray-50 text-[11px] font-semibold text-gray-700 shadow-2xs">
+            {/* Right: Accessibility Controls, Language, Login & G20 Logo */}
+            <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+              {/* Accessibility Buttons (A- / A / A+) */}
+              <div className="hidden sm:flex items-center border border-gray-300 rounded-md overflow-hidden bg-gray-50 text-[11px] font-semibold text-gray-700 shadow-2xs">
               <button
                 type="button"
                 onClick={() => setFontSizeScale("sm")}
@@ -261,14 +265,14 @@ export default function LandingPage() {
                 className="flex items-center gap-1 text-xs font-semibold text-gray-700 hover:text-[#0B2559] px-2 py-1.5 rounded-md hover:bg-gray-100 transition"
               >
                 <Globe className="w-3.5 h-3.5 text-gray-500" />
-                <span>{language}</span>
+                <span className="hidden sm:inline">{lang === 'en' ? 'English' : lang === 'hi' ? 'हिन्दी (Hindi)' : 'मराठी (Marathi)'}</span>
                 <ChevronDown className="w-3 h-3 text-gray-400" />
               </button>
               {langDropdownOpen && (
                 <div className="absolute right-0 mt-1 w-32 bg-white border border-gray-200 rounded-md shadow-lg py-1 z-50 text-xs">
                   <button
                     onClick={() => {
-                      setLanguage("English");
+                      changeLanguage("en");
                       setLangDropdownOpen(false);
                     }}
                     className="w-full text-left px-3 py-1.5 hover:bg-blue-50 hover:text-[#0B2559] font-medium"
@@ -277,7 +281,7 @@ export default function LandingPage() {
                   </button>
                   <button
                     onClick={() => {
-                      setLanguage("हिन्दी (Hindi)");
+                      changeLanguage("hi");
                       setLangDropdownOpen(false);
                     }}
                     className="w-full text-left px-3 py-1.5 hover:bg-blue-50 hover:text-[#0B2559] font-medium"
@@ -286,7 +290,7 @@ export default function LandingPage() {
                   </button>
                   <button
                     onClick={() => {
-                      setLanguage("मराठी (Marathi)");
+                      changeLanguage("mr");
                       setLangDropdownOpen(false);
                     }}
                     className="w-full text-left px-3 py-1.5 hover:bg-blue-50 hover:text-[#0B2559] font-medium"
@@ -302,16 +306,16 @@ export default function LandingPage() {
               <div className="flex items-center gap-2">
                 <Link
                   href="/dashboard"
-                  className="flex items-center gap-1.5 bg-[#0B2559] text-white hover:bg-[#071a3d] text-xs font-semibold px-3 py-1.5 rounded-md transition shadow-xs"
+                  className="flex items-center gap-1.5 bg-[#0B2559] text-white hover:bg-[#071a3d] text-xs font-semibold px-2 sm:px-3 py-1.5 rounded-md transition shadow-xs"
                 >
                   <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-                  <span>Dashboard</span>
+                  <span className="hidden sm:inline">Dashboard</span>
                 </Link>
                 <button
                   type="button"
                   onClick={() => logout()}
                   title="Sign Out"
-                  className="text-xs text-gray-500 hover:text-red-600 px-1 py-1"
+                  className="text-xs text-gray-500 hover:text-red-600 px-1 py-1 hidden sm:block"
                 >
                   Log out
                 </button>
@@ -334,7 +338,7 @@ export default function LandingPage() {
             )}
 
             {/* G20 India Official Logo */}
-            <div className="shrink-0 flex items-center justify-center pl-2 sm:pl-3 border-l border-gray-200">
+            <div className="hidden sm:flex shrink-0 items-center justify-center pl-2 sm:pl-3 border-l border-gray-200">
               <div className="relative h-10 w-20 flex items-center justify-center">
                 <Image
                   src="/portal/g20_official.png"
@@ -342,21 +346,30 @@ export default function LandingPage() {
                   width={80}
                   height={42}
                   className="w-full h-full object-contain"
+                  style={{ width: "auto", height: "auto" }}
                   priority
                   unoptimized
                 />
               </div>
             </div>
+
+            {/* Mobile Menu Toggle Button */}
+            <button 
+              className="md:hidden p-1.5 ml-1 text-[#0B2559] hover:bg-gray-100 rounded-md transition"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            >
+              {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
           </div>
         </div>
 
         {/* Mobile Portal Title shown on small viewports */}
         <div className="md:hidden text-center py-1.5 bg-blue-50/50 border-t border-blue-100">
           <h1 className="text-sm font-bold text-[#0B2559]">
-            Packaged Commodities Compliance Portal
+            {t('portal_title')}
           </h1>
           <p className="text-[10px] text-gray-500 italic">
-            Transparent Weights. Trusted Consumers. Stronger India.
+            {t('portal_tagline')}
           </p>
         </div>
       </header>
@@ -364,78 +377,82 @@ export default function LandingPage() {
       {/* ========================================================================= */}
       {/* 2. MAIN NAVIGATION BAR (Solid Navy Background)                             */}
       {/* ========================================================================= */}
-      <nav className="bg-[#0B2559] text-white">
+      <nav className={`${isMobileMenuOpen ? 'block' : 'hidden'} md:block bg-[#0B2559] text-white`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row md:items-center justify-between py-2 gap-3">
-            {/* Horizontal Nav Links */}
-            <div className="flex items-center flex-wrap gap-1 sm:gap-2 text-xs sm:text-sm font-medium">
-              {/* Home (Active with Green Underline) */}
+          <div className="flex flex-col md:flex-row md:items-center justify-between py-3 md:py-2 gap-4 md:gap-3">
+            {/* Nav Links */}
+            <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-1 text-sm font-medium">
+              {/* Home (Active with Green Underline on desktop) */}
               <Link
                 href="/"
-                className="flex items-center gap-1.5 px-3 py-1.5 text-white font-semibold relative after:content-[''] after:absolute after:bottom-0 after:left-2 after:right-2 after:h-[2.5px] after:bg-[#1E7B34] after:rounded-full"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="flex items-center gap-2 px-3 py-2 md:py-1.5 text-white font-semibold relative md:after:content-[''] md:after:absolute md:after:bottom-0 md:after:left-2 md:after:right-2 md:after:h-[2.5px] md:after:bg-[#1E7B34] md:after:rounded-full bg-white/10 md:bg-transparent rounded-md md:rounded-none w-full md:w-auto"
               >
                 <Home className="w-4 h-4" />
-                <span>Home</span>
+                <span>{t('nav_home')}</span>
               </Link>
 
               <button
                 type="button"
                 onClick={() => {
+                  setIsMobileMenuOpen(false);
                   const el = document.getElementById("check-product-section");
                   el?.scrollIntoView({ behavior: "smooth" });
                 }}
-                className="px-2.5 py-1.5 text-gray-200 hover:text-white hover:bg-white/10 rounded-md transition"
+                className="w-full md:w-auto text-left px-3 py-2 md:px-2.5 md:py-1.5 text-gray-200 hover:text-white hover:bg-white/10 rounded-md transition"
               >
-                Check Product
+                {t('nav_check_product')}
               </button>
 
               <button
                 type="button"
-                onClick={() => setShowRulesModal(true)}
-                className="px-2.5 py-1.5 text-gray-200 hover:text-white hover:bg-white/10 rounded-md transition"
+                onClick={() => { setIsMobileMenuOpen(false); setShowRulesModal(true); }}
+                className="w-full md:w-auto text-left px-3 py-2 md:px-2.5 md:py-1.5 text-gray-200 hover:text-white hover:bg-white/10 rounded-md transition"
               >
-                Know the Rules
+                {t('nav_know_rules')}
               </button>
 
               <button
                 type="button"
-                onClick={() => setShowAwarenessModal(true)}
-                className="px-2.5 py-1.5 text-gray-200 hover:text-white hover:bg-white/10 rounded-md transition"
+                onClick={() => { setIsMobileMenuOpen(false); setShowAwarenessModal(true); }}
+                className="w-full md:w-auto text-left px-3 py-2 md:px-2.5 md:py-1.5 text-gray-200 hover:text-white hover:bg-white/10 rounded-md transition"
               >
-                Consumer Awareness
+                {t('nav_consumer_awareness')}
               </button>
 
               <button
                 type="button"
-                onClick={() => setShowViolationModal(true)}
-                className="px-2.5 py-1.5 text-gray-200 hover:text-white hover:bg-white/10 rounded-md transition"
+                onClick={() => { setIsMobileMenuOpen(false); setShowViolationModal(true); }}
+                className="w-full md:w-auto text-left px-3 py-2 md:px-2.5 md:py-1.5 text-gray-200 hover:text-white hover:bg-white/10 rounded-md transition"
               >
-                Report Violation
+                {t('nav_report_violation')}
               </button>
 
               <Link
                 href="/dashboard"
-                className="px-2.5 py-1.5 text-gray-200 hover:text-white hover:bg-white/10 rounded-md transition"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="w-full md:w-auto text-left px-3 py-2 md:px-2.5 md:py-1.5 text-gray-200 hover:text-white hover:bg-white/10 rounded-md transition"
               >
-                Dashboard
+                {t('nav_dashboard')}
               </Link>
 
               <button
                 type="button"
-                onClick={() => setShowRulesModal(true)}
-                className="px-2.5 py-1.5 text-gray-200 hover:text-white hover:bg-white/10 rounded-md transition hidden sm:inline-block"
+                onClick={() => { setIsMobileMenuOpen(false); setShowRulesModal(true); }}
+                className="w-full md:w-auto text-left px-3 py-2 md:px-2.5 md:py-1.5 text-gray-200 hover:text-white hover:bg-white/10 rounded-md transition"
               >
-                Resources
+                {t('nav_resources')}
               </button>
 
               <button
                 type="button"
                 onClick={() => {
+                  setIsMobileMenuOpen(false);
                   alert("Government of India - Legal Metrology Division, Department of Consumer Affairs, Krishi Bhawan, New Delhi.");
                 }}
-                className="px-2.5 py-1.5 text-gray-200 hover:text-white hover:bg-white/10 rounded-md transition hidden lg:inline-block"
+                className="w-full md:w-auto text-left px-3 py-2 md:px-2.5 md:py-1.5 text-gray-200 hover:text-white hover:bg-white/10 rounded-md transition"
               >
-                About Us
+                {t('nav_about_us')}
               </button>
             </div>
 
@@ -453,7 +470,7 @@ export default function LandingPage() {
                     handleVerify(navSearchQuery);
                   }
                 }}
-                placeholder="Search products, rules, etc."
+                placeholder={t('search_placeholder')}
                 className="w-full bg-white text-gray-900 placeholder-gray-400 text-xs sm:text-sm pl-3 pr-9 py-1.5 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-inner"
               />
               <button
@@ -493,8 +510,8 @@ export default function LandingPage() {
           />
         </div>
 
-        {/* Soft left-side illumination gradient ensuring text is 100% crisp across any screen width */}
-        <div className="absolute inset-0 bg-gradient-to-r from-white/95 via-white/80 to-transparent sm:via-white/55 md:from-white/85 md:via-white/35 md:to-transparent pointer-events-none z-10" />
+        {/* Soft left-side illumination gradient ensuring text is crisp across any screen width */}
+        <div className="absolute inset-0 bg-gradient-to-r from-white/95 via-white/90 to-white/80 sm:to-transparent sm:via-white/55 md:from-white/85 md:via-white/35 md:to-transparent pointer-events-none z-10" />
 
         {/* "Right Information, Stronger Consumers" Slogan with Indian Tricolor Accent */}
         <div className="absolute top-5 sm:top-6 right-6 sm:right-10 lg:right-14 z-20 pointer-events-none hidden md:block">
@@ -503,13 +520,13 @@ export default function LandingPage() {
               className="text-[17px] lg:text-[21px] font-bold italic text-slate-700 tracking-tight"
               style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
             >
-              Right Information
+              {t('right_info')}
             </span>
             <span
               className="text-[17px] lg:text-[21px] font-bold italic text-slate-700 tracking-tight -mt-1"
               style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
             >
-              Stronger Consumers
+              {t('stronger_consumers')}
             </span>
             <div className="w-32 lg:w-36 h-2 relative mt-1">
               <div className="h-[2.5px] w-full bg-gradient-to-r from-transparent via-[#FF9933] to-[#FF9933] rounded-full" />
@@ -526,19 +543,16 @@ export default function LandingPage() {
             {/* Small Green Badge Label */}
             <div className="inline-block">
               <span className="text-[#1E7B34] font-bold text-xs tracking-wider uppercase">
-                ENSURING FAIR TRADE
+                {t('ensuring_fair_trade')}
               </span>
             </div>
 
             {/* Large Bold Navy Heading */}
-            <h2 className="text-2xl sm:text-3xl lg:text-[38px] font-black text-[#0B2559] leading-[1.15] tracking-tight">
-              Check Compliance of <br className="hidden sm:inline" />
-              Packaged Commodities
-            </h2>
+            <h2 className="text-2xl sm:text-3xl lg:text-[38px] font-black text-[#0B2559] leading-[1.15] tracking-tight" dangerouslySetInnerHTML={{__html: t('check_compliance_title')}}></h2>
 
             {/* Subtext */}
             <p className="text-gray-600 text-xs sm:text-sm leading-relaxed max-w-lg font-normal">
-              Verify whether a packaged product complies with the Legal Metrology (Packaged Commodities) Rules, 2011.
+              {t('check_compliance_desc')}
             </p>
 
             {/* Two CTA Buttons */}
@@ -551,7 +565,7 @@ export default function LandingPage() {
                 }}
                 className="bg-[#0B2559] hover:bg-[#071a3d] text-white px-5 py-2.5 rounded-lg text-xs sm:text-sm font-semibold shadow-sm hover:shadow-md transition flex items-center gap-2"
               >
-                <span>Check a Product</span>
+                <span>{t('btn_check_product')}</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
 
@@ -560,18 +574,18 @@ export default function LandingPage() {
                 onClick={() => setShowRulesModal(true)}
                 className="border border-gray-300 hover:border-gray-400 bg-white hover:bg-gray-50 text-gray-800 px-5 py-2.5 rounded-lg text-xs sm:text-sm font-semibold shadow-2xs transition"
               >
-                Learn More
+                {t('btn_learn_more')}
               </button>
             </div>
 
-            {/* Row of 3 Trust Badges */}
-            <div className="grid grid-cols-3 gap-2 sm:gap-4 pt-3 border-t border-gray-200/80">
+            {/* Row of Trust Badges */}
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 pt-4 border-t border-gray-200/80">
               <div className="flex items-center gap-2">
                 <div className="w-6 h-6 rounded-full bg-blue-100/90 flex items-center justify-center shrink-0">
                   <Shield className="w-3.5 h-3.5 text-[#0B2559]" />
                 </div>
-                <span className="text-xs font-semibold text-gray-700">
-                  Consumer Protection
+                <span className="text-xs font-semibold text-gray-800">
+                  {t('badge_consumer_protection')}
                 </span>
               </div>
 
@@ -579,8 +593,8 @@ export default function LandingPage() {
                 <div className="w-6 h-6 rounded-full bg-emerald-100/90 flex items-center justify-center shrink-0">
                   <Scale className="w-3.5 h-3.5 text-[#0B2559]" />
                 </div>
-                <span className="text-xs font-semibold text-gray-700">
-                  Fair Measurement
+                <span className="text-xs font-semibold text-gray-800">
+                  {t('badge_fair_measurement')}
                 </span>
               </div>
 
@@ -588,8 +602,8 @@ export default function LandingPage() {
                 <div className="w-6 h-6 rounded-full bg-indigo-100/90 flex items-center justify-center shrink-0">
                   <Users className="w-3.5 h-3.5 text-[#0B2559]" />
                 </div>
-                <span className="text-xs font-semibold text-gray-700">
-                  Trusted Marketplace
+                <span className="text-xs font-semibold text-gray-800">
+                  {t('badge_trusted_marketplace')}
                 </span>
               </div>
             </div>
@@ -615,9 +629,9 @@ export default function LandingPage() {
                 <Search className="w-6 h-6" />
               </div>
               <div>
-                <h3 className="text-sm font-bold text-[#0B2559]">Check Product</h3>
+                <h3 className="text-sm font-bold text-[#0B2559]">{t('btn_check_product')}</h3>
                 <p className="text-[11px] text-gray-600 leading-snug mt-0.5">
-                  Scan or enter details to verify compliance
+                  {t('card_check_product_desc')}
                 </p>
               </div>
             </div>
@@ -631,9 +645,9 @@ export default function LandingPage() {
                 <BookOpen className="w-6 h-6" />
               </div>
               <div>
-                <h3 className="text-sm font-bold text-emerald-950">Understand the Rules</h3>
+                <h3 className="text-sm font-bold text-emerald-950">{t('card_understand_rules')}</h3>
                 <p className="text-[11px] text-gray-600 leading-snug mt-0.5">
-                  Learn about Legal Metrology Rules, 2011
+                  {t('card_understand_rules_desc')}
                 </p>
               </div>
             </div>
@@ -647,9 +661,9 @@ export default function LandingPage() {
                 <Megaphone className="w-6 h-6" />
               </div>
               <div>
-                <h3 className="text-sm font-bold text-amber-950">Report a Violation</h3>
+                <h3 className="text-sm font-bold text-amber-950">{t('card_report_violation')}</h3>
                 <p className="text-[11px] text-gray-600 leading-snug mt-0.5">
-                  Help us ensure fair trade
+                  {t('card_report_violation_desc')}
                 </p>
               </div>
             </div>
@@ -663,9 +677,9 @@ export default function LandingPage() {
                 <Users className="w-6 h-6" />
               </div>
               <div>
-                <h3 className="text-sm font-bold text-rose-950">Consumer Awareness</h3>
+                <h3 className="text-sm font-bold text-rose-950">{t('card_consumer_awareness')}</h3>
                 <p className="text-[11px] text-gray-600 leading-snug mt-0.5">
-                  Tips, guides and resources
+                  {t('card_consumer_awareness_desc')}
                 </p>
               </div>
             </div>
@@ -680,11 +694,11 @@ export default function LandingPage() {
               </div>
               <div>
                 <div className="flex items-center gap-1">
-                  <h3 className="text-sm font-bold text-purple-950">Compliance Dashboard</h3>
+                  <h3 className="text-sm font-bold text-purple-950">{t('card_compliance_dashboard')}</h3>
                   <ArrowUpRight className="w-3 h-3 text-purple-700" />
                 </div>
                 <p className="text-[11px] text-gray-600 leading-snug mt-0.5">
-                  State-wise insights and reports
+                  {t('card_compliance_dashboard_desc')}
                 </p>
               </div>
             </Link>
@@ -703,10 +717,10 @@ export default function LandingPage() {
             <div className="lg:col-span-5 bg-white border border-gray-200 rounded-xl p-5 sm:p-6 shadow-sm">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-base sm:text-lg font-black text-[#0B2559]">
-                  Check a Packaged Product
+                  {t('section_check_product')}
                 </h3>
                 <span className="text-xs bg-blue-50 text-blue-800 font-semibold px-2 py-0.5 rounded border border-blue-200">
-                  LM Rules 2011
+                  {t('lm_rules_badge')}
                 </span>
               </div>
 
@@ -721,7 +735,7 @@ export default function LandingPage() {
                     }`}
                 >
                   <Barcode className="w-4 h-4" />
-                  <span>Scan Barcode</span>
+                  <span>{t('tab_scan_barcode')}</span>
                 </button>
 
                 <button
@@ -733,7 +747,7 @@ export default function LandingPage() {
                     }`}
                 >
                   <Edit3 className="w-4 h-4" />
-                  <span>Enter Details</span>
+                  <span>{t('tab_enter_details')}</span>
                 </button>
 
                 <button
@@ -745,7 +759,7 @@ export default function LandingPage() {
                     }`}
                 >
                   <UploadCloud className="w-4 h-4" />
-                  <span>Upload Image</span>
+                  <span>{t('tab_upload_image')}</span>
                 </button>
               </div>
 
@@ -757,7 +771,7 @@ export default function LandingPage() {
                       <Barcode className="w-10 h-10 text-gray-700" />
                     </div>
                     <p className="text-xs sm:text-sm text-gray-600 max-w-xs mb-4">
-                      Scan the barcode on the package to get product details and verify compliance.
+                      {t('scan_barcode_desc')}
                     </p>
 
                     <div className="flex flex-col sm:flex-row items-center gap-2 w-full max-w-sm">
@@ -767,7 +781,7 @@ export default function LandingPage() {
                         className="w-full bg-[#0B2559] hover:bg-[#071a3d] text-white py-2.5 px-4 rounded-lg text-xs sm:text-sm font-semibold shadow-xs flex items-center justify-center gap-2 transition"
                       >
                         <Camera className="w-4 h-4" />
-                        <span>Start Camera Scanner</span>
+                        <span>{t('btn_start_camera')}</span>
                       </button>
                     </div>
                   </div>
@@ -775,7 +789,7 @@ export default function LandingPage() {
                   {/* Manual Barcode Quick Verification Input */}
                   <div className="pt-2">
                     <label className="block text-[11px] font-bold text-gray-700 uppercase tracking-wider mb-1">
-                      Or Test with Known Barcode:
+                      {t('test_known_barcode_label')}
                     </label>
                     <div className="flex gap-2">
                       <input
@@ -791,13 +805,13 @@ export default function LandingPage() {
                         disabled={isVerifying}
                         className="bg-[#0B2559] hover:bg-[#071a3d] text-white px-4 py-2 rounded-lg text-xs font-semibold shrink-0 transition"
                       >
-                        {isVerifying ? "Checking..." : "Verify"}
+                        {isVerifying ? t('checking_btn') : t('verify_btn')}
                       </button>
                     </div>
 
                     {/* Quick Pill Chips */}
                     <div className="flex flex-wrap items-center gap-1.5 mt-2">
-                      <span className="text-[10px] text-gray-500 font-medium">Quick Demo:</span>
+                      <span className="text-[10px] text-gray-500 font-medium">{t('quick_demo_label')}</span>
                       <button
                         type="button"
                         onClick={() => {
@@ -826,7 +840,7 @@ export default function LandingPage() {
                         }}
                         className="text-[10px] bg-rose-50 hover:bg-rose-100 text-rose-700 px-2 py-0.5 rounded border border-rose-300 transition"
                       >
-                        Sample Violation
+                        {t('sample_violation_btn')}
                       </button>
                     </div>
                   </div>
@@ -837,7 +851,7 @@ export default function LandingPage() {
                       onClick={() => setActiveTab("details")}
                       className="text-xs text-[#0B2559] font-medium hover:underline inline-flex items-center gap-1"
                     >
-                      Don&apos;t have a barcode? Enter details manually →
+                      {t('enter_details_manual_link')}
                     </button>
                   </div>
                 </div>
@@ -1030,40 +1044,40 @@ export default function LandingPage() {
             {/* COLUMN 2 (Light Blue Box): "Supported Product Categories" */}
             <div className="lg:col-span-3 bg-[#EDF5FD] border border-blue-200/80 rounded-xl p-5 sm:p-6 shadow-xs">
               <h3 className="text-base font-bold text-[#0B2559] mb-4">
-                Supported Product Categories
+                {t('section_categories')}
               </h3>
 
               <div className="space-y-3 text-xs sm:text-sm font-medium text-gray-800">
                 <div className="flex items-center gap-3 p-2 rounded-lg bg-white/80 border border-blue-100 hover:bg-white transition">
                   <span className="text-xl">🍎</span>
-                  <span>Food &amp; Beverages</span>
+                  <span>{t('cat_food')}</span>
                 </div>
 
                 <div className="flex items-center gap-3 p-2 rounded-lg bg-white/80 border border-blue-100 hover:bg-white transition">
                   <span className="text-xl">💧</span>
-                  <span>Personal Care &amp; Cosmetics</span>
+                  <span>{t('cat_cosmetics')}</span>
                 </div>
 
                 <div className="flex items-center gap-3 p-2 rounded-lg bg-white/80 border border-blue-100 hover:bg-white transition">
                   <span className="text-xl">🏠</span>
-                  <span>Household Products</span>
+                  <span>{t('cat_household')}</span>
                 </div>
 
                 <div className="flex items-center gap-3 p-2 rounded-lg bg-white/80 border border-blue-100 hover:bg-white transition">
                   <span className="text-xl">➕</span>
-                  <span>Healthcare &amp; OTC Products</span>
+                  <span>{t('cat_healthcare')}</span>
                 </div>
 
                 <div className="flex items-center gap-3 p-2 rounded-lg bg-white/80 border border-blue-100 hover:bg-white transition">
                   <span className="text-xl">📦</span>
-                  <span>All other packaged commodities</span>
+                  <span>{t('cat_other')}</span>
                 </div>
               </div>
 
               <div className="mt-5 p-3 rounded-lg bg-blue-100/60 border border-blue-200 text-xs text-blue-900 leading-relaxed">
-                <p className="font-semibold mb-0.5">Mandatory Declarations Required:</p>
+                <p className="font-semibold mb-0.5">{t('mandatory_decl_req')}</p>
                 <p className="text-[11px] text-blue-800">
-                  Name &amp; address of manufacturer/packer, common or generic name, net quantity, month &amp; year of manufacture/import, retail sale price (MRP), and consumer care details.
+                  {t('mandatory_decl_list')}
                 </p>
               </div>
             </div>
@@ -1072,14 +1086,14 @@ export default function LandingPage() {
             <div className="lg:col-span-4 bg-white border border-gray-200 rounded-xl p-5 sm:p-6 shadow-sm">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-base font-bold text-[#0B2559]">
-                  Latest Alerts &amp; Updates
+                  {t('section_alerts')}
                 </h3>
                 <button
                   type="button"
                   onClick={() => setShowAlertsModal(true)}
                   className="text-xs font-semibold text-[#0B2559] hover:underline flex items-center gap-0.5"
                 >
-                  <span>View All</span>
+                  <span>{t('view_all_link')}</span>
                   <ArrowRight className="w-3 h-3" />
                 </button>
               </div>
@@ -1097,14 +1111,14 @@ export default function LandingPage() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between gap-1">
                       <h4 className="text-xs font-bold text-gray-900 truncate">
-                        Advisory on Correct Net Quantity Declaration
+                        {t('alert1_title')}
                       </h4>
                       <span className="text-[10px] text-gray-400 font-medium shrink-0">
                         Sep 5, 2025
                       </span>
                     </div>
                     <p className="text-[11px] text-gray-600 mt-1 leading-snug">
-                      Ensure net quantity is declared in prescribed units as per LM Rules, 2011.
+                      {t('alert1_desc')}
                     </p>
                   </div>
                 </div>
@@ -1120,14 +1134,14 @@ export default function LandingPage() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between gap-1">
                       <h4 className="text-xs font-bold text-gray-900 truncate">
-                        Revised Guidelines for Multipack Commodities
+                        {t('alert2_title')}
                       </h4>
                       <span className="text-[10px] text-gray-400 font-medium shrink-0">
                         Aug 28, 2025
                       </span>
                     </div>
                     <p className="text-[11px] text-gray-600 mt-1 leading-snug">
-                      New guidelines issued for declaration on multipack packages.
+                      {t('alert2_desc')}
                     </p>
                   </div>
                 </div>
@@ -1143,14 +1157,14 @@ export default function LandingPage() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between gap-1">
                       <h4 className="text-xs font-bold text-gray-900 truncate">
-                        Awareness Campaign: Check Before You Buy
+                        {t('alert3_title')}
                       </h4>
                       <span className="text-[10px] text-gray-400 font-medium shrink-0">
                         Aug 12, 2025
                       </span>
                     </div>
                     <p className="text-[11px] text-gray-600 mt-1 leading-snug">
-                      Join our campaign to promote informed and safe consumer choices.
+                      {t('alert3_desc')}
                     </p>
                   </div>
                 </div>
@@ -1268,8 +1282,8 @@ export default function LandingPage() {
                   <Megaphone className="w-4 h-4" />
                 </div>
                 <div>
-                  <h3 className="text-base font-bold text-gray-900">Report a Packaging Violation</h3>
-                  <p className="text-xs text-gray-500">Legal Metrology Act, 2009 (Sec 36)</p>
+                  <h3 className="text-base font-bold text-gray-900">{t('report_violation_modal_title')}</h3>
+                  <p className="text-xs text-gray-500">{t('report_violation_modal_subtitle')}</p>
                 </div>
               </div>
               <button
@@ -1290,7 +1304,7 @@ export default function LandingPage() {
                   required
                   value={violationData.productName}
                   onChange={(e) => setViolationData({ ...violationData, productName: e.target.value })}
-                  placeholder="e.g. Mineral Water Bottle 1L / Brand XYZ"
+                  placeholder={t("product_name_placeholder")}
                   className="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-[#0B2559]"
                 />
               </div>
@@ -1304,7 +1318,7 @@ export default function LandingPage() {
                   required
                   value={violationData.retailer}
                   onChange={(e) => setViolationData({ ...violationData, retailer: e.target.value })}
-                  placeholder="e.g. Metro Station Kiosk, Blinkit, Supermarket"
+                  placeholder={t("retailer_placeholder")}
                   className="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-[#0B2559]"
                 />
               </div>
@@ -1319,12 +1333,12 @@ export default function LandingPage() {
                     onChange={(e) => setViolationData({ ...violationData, violationType: e.target.value })}
                     className="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-[#0B2559]"
                   >
-                    <option>Dual MRP / Overcharging (Rule 18)</option>
-                    <option>Smudged / Altered MRP</option>
-                    <option>Missing Net Quantity</option>
-                    <option>Non-Standard Packaging Weight</option>
-                    <option>Missing Manufacturer / Importer Address</option>
-                    <option>No Consumer Care Contact Details</option>
+                    <option>{t('violation_type_opt_1')}</option>
+                    <option>{t('violation_type_opt_2')}</option>
+                    <option>{t('violation_type_opt_3')}</option>
+                    <option>{t('violation_type_opt_4')}</option>
+                    <option>{t('violation_type_opt_5')}</option>
+                    <option>{t('violation_type_opt_6')}</option>
                   </select>
                 </div>
                 <div>
@@ -1335,7 +1349,7 @@ export default function LandingPage() {
                     type="text"
                     value={violationData.city}
                     onChange={(e) => setViolationData({ ...violationData, city: e.target.value })}
-                    placeholder="e.g. New Delhi, MH"
+                    placeholder={t("city_state_placeholder")}
                     className="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-[#0B2559]"
                   />
                 </div>
@@ -1349,7 +1363,7 @@ export default function LandingPage() {
                   rows={3}
                   value={violationData.description}
                   onChange={(e) => setViolationData({ ...violationData, description: e.target.value })}
-                  placeholder="Explain the violation, charged price vs printed MRP..."
+                  placeholder={t("brief_desc_placeholder")}
                   className="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-[#0B2559]"
                 />
               </div>
@@ -1367,7 +1381,7 @@ export default function LandingPage() {
                   disabled={violationSubmitted}
                   className="px-5 py-2 bg-[#0B2559] hover:bg-[#071a3d] text-white rounded-lg font-semibold flex items-center gap-1.5"
                 >
-                  {violationSubmitted ? "Submitting..." : "Submit to Enforcement Wing"}
+                  {violationSubmitted ? t("submitting_btn") : t("submit_enforcement_btn")}
                 </button>
               </div>
             </form>
@@ -1388,9 +1402,9 @@ export default function LandingPage() {
                 </div>
                 <div>
                   <h3 className="text-base font-bold text-[#0B2559]">
-                    Legal Metrology (Packaged Commodities) Rules, 2011
+                    {t('rules_modal_title')}
                   </h3>
-                  <p className="text-xs text-gray-500">Statutory Provisions &amp; Standards</p>
+                  <p className="text-xs text-gray-500">{t('rules_modal_subtitle')}</p>
                 </div>
               </div>
               <button
@@ -1403,29 +1417,29 @@ export default function LandingPage() {
 
             <div className="space-y-4 text-xs text-gray-700 leading-relaxed">
               <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                <h4 className="font-bold text-[#0B2559] mb-1">Rule 6: Mandatory Declarations</h4>
-                <p>Every package must bear the following clear, unsmudged declarations:</p>
+                <h4 className="font-bold text-[#0B2559] mb-1">{t('rule_6_title')}</h4>
+                <p>{t('rule_6_desc')}</p>
                 <ul className="list-disc list-inside mt-1 space-y-1 text-gray-600">
-                  <li>Name and complete address of the manufacturer, packer, or importer.</li>
-                  <li>Common or generic name of the commodity contained in the package.</li>
-                  <li>Net quantity in terms of standard unit of weight or measure (g, kg, ml, L, m).</li>
-                  <li>Month and year in which the commodity is manufactured, packed or imported.</li>
-                  <li>Retail sale price (MRP) in Indian currency, inclusive of all taxes.</li>
-                  <li>Name, address, telephone number, and email of person or office for consumer complaints.</li>
+                  <li>{t('rule_6_l1')}</li>
+                  <li>{t('rule_6_l2')}</li>
+                  <li>{t('rule_6_l3')}</li>
+                  <li>{t('rule_6_l4')}</li>
+                  <li>{t('rule_6_l5')}</li>
+                  <li>{t('rule_6_l6')}</li>
                 </ul>
               </div>
 
               <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg">
-                <h4 className="font-bold text-amber-900 mb-1">Rule 18(2): Prohibition of Dual MRP</h4>
+                <h4 className="font-bold text-amber-900 mb-1">{t('rule_18_title')}</h4>
                 <p>
-                  No manufacturer, packer, importer or seller shall alter, smudge, or paste another price over the retail sale price declared on the package. Charging above MRP or having two different MRPs for identical products at different venues (e.g. airports vs local markets) is an offence under Section 36 of the Act.
+                  {t('rule_18_desc')}
                 </p>
               </div>
 
               <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-lg">
-                <h4 className="font-bold text-emerald-900 mb-1">Second Schedule: Standard Package Sizes</h4>
+                <h4 className="font-bold text-emerald-900 mb-1">{t('second_schedule_title')}</h4>
                 <p>
-                  Specified commodities such as baby milk, biscuits, tea, salt, and edible oils must only be packed in prescribed standard quantities (e.g. 100g, 200g, 500g, 1kg) to prevent deceptive packaging.
+                  {t('second_schedule_desc')}
                 </p>
               </div>
             </div>
@@ -1435,7 +1449,7 @@ export default function LandingPage() {
                 onClick={() => setShowRulesModal(false)}
                 className="bg-[#0B2559] text-white px-4 py-2 rounded-lg text-xs font-semibold"
               >
-                Close Guidelines
+                {t('close_guidelines_btn')}
               </button>
             </div>
           </div>
@@ -1454,8 +1468,8 @@ export default function LandingPage() {
                   <Users className="w-4 h-4" />
                 </div>
                 <div>
-                  <h3 className="text-base font-bold text-gray-900">Jago Grahak Jago — Consumer Rights</h3>
-                  <p className="text-xs text-gray-500">Know What to Check Before You Pay</p>
+                  <h3 className="text-base font-bold text-gray-900">{t('awareness_modal_title')}</h3>
+                  <p className="text-xs text-gray-500">{t('awareness_modal_subtitle')}</p>
                 </div>
               </div>
               <button
@@ -1469,21 +1483,21 @@ export default function LandingPage() {
             <div className="space-y-3 text-xs text-gray-700">
               <div className="flex items-start gap-2.5 p-2.5 bg-gray-50 rounded-lg">
                 <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                <p><strong>Never Pay Above MRP:</strong> MRP is statutory and always includes all applicable taxes (GST). Extra &apos;cooling charges&apos; or &apos;convenience fee&apos; on packaged goods are illegal.</p>
+                <p><strong>{t('awareness_point1_title')}</strong> {t('awareness_point1_desc')}</p>
               </div>
 
               <div className="flex items-start gap-2.5 p-2.5 bg-gray-50 rounded-lg">
                 <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                <p><strong>Inspect Net Weight:</strong> Ensure the package contains the exact declared weight and is not underweight. Use verified trade scales available at retail counters.</p>
+                <p><strong>{t('awareness_point2_title')}</strong> {t('awareness_point2_desc')}</p>
               </div>
 
               <div className="flex items-start gap-2.5 p-2.5 bg-gray-50 rounded-lg">
                 <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                <p><strong>Check Customer Care Details:</strong> Every legal package must have an email, telephone, and postal address for grievances.</p>
+                <p><strong>{t('awareness_point3_title')}</strong> {t('awareness_point3_desc')}</p>
               </div>
 
               <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg text-blue-950">
-                <strong>Need immediate assistance?</strong> Call National Consumer Helpline at <strong>1915</strong> or SMS &apos;CONSUMER&apos; to 8800001915.
+                <strong>{t('awareness_help_title')}</strong> {t('awareness_help_text1')} <strong>1915</strong> {t('awareness_help_text2')}
               </div>
             </div>
 
@@ -1492,7 +1506,7 @@ export default function LandingPage() {
                 onClick={() => setShowAwarenessModal(false)}
                 className="bg-[#0B2559] text-white px-4 py-2 rounded-lg text-xs font-semibold"
               >
-                Understood
+                {t('understood_btn')}
               </button>
             </div>
           </div>
@@ -1519,24 +1533,24 @@ export default function LandingPage() {
 
             <div className="space-y-3 text-xs">
               <div className="p-3 border rounded-lg bg-gray-50">
-                <span className="text-[10px] bg-red-100 text-red-800 px-1.5 py-0.5 rounded font-bold">CIRCULAR #2025/LM/09</span>
-                <h4 className="font-bold text-gray-900 mt-1">Advisory on Correct Net Quantity Declaration</h4>
-                <p className="text-gray-600 mt-1">State Enforcement Directorates are directed to conduct special drives verifying net quantity declarations on packaged food items and pulses.</p>
-                <span className="text-[10px] text-gray-400 block mt-2">Published: Sep 5, 2025</span>
+                <span className="text-[10px] bg-red-100 text-red-800 px-1.5 py-0.5 rounded font-bold">{t('circular_1_tag')}</span>
+                <h4 className="font-bold text-gray-900 mt-1">{t('circular_1_title')}</h4>
+                <p className="text-gray-600 mt-1">{t('circular_1_desc')}</p>
+                <span className="text-[10px] text-gray-400 block mt-2">{t('circular_1_date')}</span>
               </div>
 
               <div className="p-3 border rounded-lg bg-gray-50">
-                <span className="text-[10px] bg-blue-100 text-blue-800 px-1.5 py-0.5 rounded font-bold">AMENDMENT 2025</span>
-                <h4 className="font-bold text-gray-900 mt-1">Revised Guidelines for Multipack Commodities</h4>
-                <p className="text-gray-600 mt-1">Multipacks containing individual units intended for separate sale must declare the individual unit price alongside the total package MRP.</p>
-                <span className="text-[10px] text-gray-400 block mt-2">Published: Aug 28, 2025</span>
+                <span className="text-[10px] bg-blue-100 text-blue-800 px-1.5 py-0.5 rounded font-bold">{t('circular_2_tag')}</span>
+                <h4 className="font-bold text-gray-900 mt-1">{t('circular_2_title')}</h4>
+                <p className="text-gray-600 mt-1">{t('circular_2_desc')}</p>
+                <span className="text-[10px] text-gray-400 block mt-2">{t('circular_2_date')}</span>
               </div>
 
               <div className="p-3 border rounded-lg bg-gray-50">
-                <span className="text-[10px] bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded font-bold">CAMPAIGN</span>
-                <h4 className="font-bold text-gray-900 mt-1">Nationwide Drive: Check Before You Buy</h4>
-                <p className="text-gray-600 mt-1">Public advisory encouraging consumers to verify the unit sale price (USP) and mandatory details before purchasing packaged goods.</p>
-                <span className="text-[10px] text-gray-400 block mt-2">Published: Aug 12, 2025</span>
+                <span className="text-[10px] bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded font-bold">{t('circular_3_tag')}</span>
+                <h4 className="font-bold text-gray-900 mt-1">{t('circular_3_title')}</h4>
+                <p className="text-gray-600 mt-1">{t('circular_3_desc')}</p>
+                <span className="text-[10px] text-gray-400 block mt-2">{t('circular_3_date')}</span>
               </div>
             </div>
 
