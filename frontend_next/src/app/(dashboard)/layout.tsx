@@ -184,7 +184,6 @@ export default function DashboardLayout({
 
   const getDisplayName = () => {
     if (currentUser?.name && currentUser.name !== "Enforcement Officer") return currentUser.name;
-    if (currentUser?.full_name) return currentUser.full_name;
     if (isAdmin) return "Dr. Arvind Saxena, IAS";
     if (isUser) return "Shri Aarav Sharma";
     return "Shri Shubham Sharma, ILM";
