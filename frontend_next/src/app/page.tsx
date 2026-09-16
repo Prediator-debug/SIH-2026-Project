@@ -44,7 +44,14 @@ export default function LandingPage() {
   const { user, logout } = useAuth();
   const { lang, changeLanguage, t } = useLanguage();
 
-
+  const [currentSlideIndex, setCurrentSlideIndex] = useState(1);
+  
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlideIndex((prev) => (prev >= 5 ? 1 : prev + 1));
+    }, 3000);
+    return () => clearInterval(timer);
+  }, []);
 
   // Accessibility Font Scaling
   const [fontSizeScale, setFontSizeScale] = useState<"sm" | "normal" | "lg">("normal");
@@ -497,17 +504,21 @@ export default function LandingPage() {
       {/* 3. HERO SECTION (Exact Match with Reference UI Mockup)                    */}
       {/* ========================================================================= */}
       <section className="relative bg-[#F4F6F9] border-b border-gray-200 overflow-hidden min-h-[400px] md:min-h-[430px] lg:min-h-[460px] flex items-center">
-        {/* Static Hero Background Image */}
+        {/* Animated Hero Background Image */}
         <div className="absolute inset-0 w-full h-full pointer-events-none z-0 overflow-hidden">
-          <Image
-            src="/portal/slides/slide_1.jpeg"
-            alt="Packaged Commodities: GoodLife Milk, SunPure Sunflower Oil, Nature's Bite Atta, Crispy Chips"
-            fill
-            sizes="100vw"
-            className="w-full h-full object-cover object-center"
-            priority={true}
-            unoptimized
-          />
+          {/* We map over all slides to preload them but only show the active one */}
+          {[1, 2, 3, 4, 5].map((idx) => (
+            <Image
+              key={idx}
+              src={`/portal/slides/slide_${idx}.jpeg`}
+              alt={`Packaged Commodities Slide ${idx}`}
+              fill
+              sizes="100vw"
+              className={`w-full h-full object-cover object-center transition-opacity duration-1000 ease-in-out ${currentSlideIndex === idx ? 'opacity-100' : 'opacity-0'}`}
+              priority={idx === 1}
+              unoptimized
+            />
+          ))}
         </div>
 
         {/* Soft left-side illumination gradient ensuring text is crisp across any screen width */}
