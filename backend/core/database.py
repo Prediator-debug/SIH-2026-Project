@@ -70,146 +70,9 @@ products_db = [
     }
 ]
 
-inspections_db = [
-    {
-        "id": "INS-2026-001",
-        "productId": "CMD-001",
-        "product_name": "Parle-G Original Gluco Biscuits 800g",
-        "manufacturer": "Parle Products Pvt. Ltd., Vile Parle East, Mumbai, MH - 400057",
-        "officerId": "officer@lmd.gov.in",
-        "date": "2026-09-08T11:20:00Z",
-        "status": "Compliant",
-        "compliance_score": 96.5,
-        "images": [],
-        "raw_text_lines": ["PARLE-G", "Net Qty: 800g", "MRP Rs. 85.00 incl. of all taxes", "Mfg: 08/2026", "Parle Products Pvt. Ltd."],
-        "declarations": {
-            "Manufacturer": {"value": "Parle Products Pvt. Ltd., Vile Parle East, Mumbai, MH - 400057", "confidence": 0.96},
-            "Net_Quantity": {"value": "800g", "confidence": 0.98},
-            "MRP": {"value": "₹85.00", "confidence": 0.99},
-            "MRP_Tax_Text": {"value": "inclusive of all taxes", "confidence": 0.94},
-            "Date_of_Mfg_or_Expiry": {"value": "08/2026", "confidence": 0.95},
-            "Consumer_Care": {"value": "1800-22-2211, customercare@parle.biz", "confidence": 0.92},
-            "Country_of_Origin": {"value": "India", "confidence": 0.99}
-        },
-        "verified_declarations": {
-            "Manufacturer": {"value": "Parle Products Pvt. Ltd., Vile Parle East, Mumbai, MH - 400057", "confidence": 0.96},
-            "Net_Quantity": {"value": "800g", "confidence": 0.98},
-            "MRP": {"value": "₹85.00", "confidence": 0.99},
-            "MRP_Tax_Text": {"value": "inclusive of all taxes", "confidence": 0.94},
-            "Date_of_Mfg_or_Expiry": {"value": "08/2026", "confidence": 0.95},
-            "Consumer_Care": {"value": "1800-22-2211, customercare@parle.biz", "confidence": 0.92},
-            "Country_of_Origin": {"value": "India", "confidence": 0.99}
-        },
-        "compliance_result": {
-            "overall_status": "Compliant",
-            "compliance_score": 96.5,
-            "checklist": [
-                {"rule_id": "LM-001", "title": "Manufacturer & Packer Details", "source": "Rule 6(1)(a)", "verdict": "PASS", "severity": "CRITICAL"},
-                {"rule_id": "LM-002", "title": "Country of Origin for Imports", "source": "Rule 6(10)", "verdict": "PASS", "severity": "MAJOR"},
-                {"rule_id": "LM-003", "title": "Net Quantity & Metric Standard", "source": "Rule 12(6)", "verdict": "PASS", "severity": "CRITICAL"},
-                {"rule_id": "LM-004", "title": "Maximum Retail Price (MRP)", "source": "Rule 6(1)(e)", "verdict": "PASS", "severity": "CRITICAL"},
-                {"rule_id": "LM-005", "title": "Month and Year of Manufacture", "source": "Rule 6(1)(d)", "verdict": "PASS", "severity": "CRITICAL"},
-                {"rule_id": "LM-006", "title": "Consumer Care Redressal Details", "source": "Rule 6(1)(n)", "verdict": "PASS", "severity": "MAJOR"}
-            ],
-            "violations": [],
-            "discrepancies": []
-        },
-        "analysis": {
-            "readability_score": 94,
-            "readability_status": "Highly Legible",
-            "sharpness": {"laplacian_variance": 220.0, "sharpness_status": "Optimal"},
-            "average_font_height_px": 28,
-            "average_ocr_confidence": 95
-        },
-        "evidence": {
-            "sha256_hash": "SHA256-4A9B2E3F8C1D7A0E5F6B8C9D0E1F2A3B4C5D6E7F8A9B0C1D2E3F4A5B6C7D8E9F",
-            "integrity_status": "VERIFIED_TAMPER_EVIDENT",
-            "base64_evidence": None
-        },
-        "officer_remarks": "Verified retail package declarations at supermart audit. Satisfies all Rule 6 provisions."
-    },
-    {
-        "id": "INS-2026-002",
-        "productId": "CMD-004",
-        "product_name": "Aashirvaad Superior MP Shuddh Chakki Atta 5kg",
-        "manufacturer": "ITC Limited, 37 J.L. Nehru Road, Kolkata - 700071",
-        "officerId": "officer@lmd.gov.in",
-        "date": "2026-09-09T15:45:00Z",
-        "status": "Potentially Non-Compliant",
-        "compliance_score": 68.0,
-        "images": [],
-        "raw_text_lines": ["AASHIRVAAD ATTA", "Net Qty: 5kg", "MRP 245.00", "ITC Limited"],
-        "declarations": {
-            "Manufacturer": {"value": "ITC Limited, 37 J.L. Nehru Road, Kolkata - 700071", "confidence": 0.95},
-            "Net_Quantity": {"value": "5kg", "confidence": 0.97},
-            "MRP": {"value": "₹245.00", "confidence": 0.98},
-            "MRP_Tax_Text": {"value": None, "confidence": 0.0},
-            "Date_of_Mfg_or_Expiry": {"value": "07/2026", "confidence": 0.91},
-            "Consumer_Care": {"value": "1800-425-4444", "confidence": 0.89},
-            "Country_of_Origin": {"value": "India", "confidence": 0.95}
-        },
-        "verified_declarations": {
-            "Manufacturer": {"value": "ITC Limited, 37 J.L. Nehru Road, Kolkata - 700071", "confidence": 0.95},
-            "Net_Quantity": {"value": "5kg", "confidence": 0.97},
-            "MRP": {"value": "₹245.00", "confidence": 0.98},
-            "MRP_Tax_Text": {"value": None, "confidence": 0.0},
-            "Date_of_Mfg_or_Expiry": {"value": "07/2026", "confidence": 0.91},
-            "Consumer_Care": {"value": "1800-425-4444", "confidence": 0.89},
-            "Country_of_Origin": {"value": "India", "confidence": 0.95}
-        },
-        "compliance_result": {
-            "overall_status": "Potentially Non-Compliant",
-            "compliance_score": 68.0,
-            "checklist": [
-                {"rule_id": "LM-001", "title": "Manufacturer Details", "source": "Rule 6(1)(a)", "verdict": "PASS", "severity": "CRITICAL"},
-                {"rule_id": "LM-004", "title": "MRP Tax Inclusivity Text", "source": "Rule 6(1)(e)", "verdict": "FAIL", "reason": "Missing mandatory 'incl. of all taxes' expression beside MRP", "severity": "CRITICAL"},
-                {"rule_id": "LM-007", "title": "Unit Sale Price (USP)", "source": "Rule 6(1)(s)", "verdict": "FAIL", "reason": "Missing mandatory Unit Sale Price declaration for package > 1kg", "severity": "MAJOR"}
-            ],
-            "violations": [
-                {"rule_id": "LM-004", "title": "MRP Tax Inclusivity Text", "source": "Rule 6(1)(e)", "severity": "CRITICAL", "reason": "Missing mandatory 'incl. of all taxes' expression beside MRP"},
-                {"rule_id": "LM-007", "title": "Unit Sale Price (USP)", "source": "Rule 6(1)(s)", "severity": "MAJOR", "reason": "Missing mandatory Unit Sale Price declaration for package > 1kg"}
-            ],
-            "discrepancies": []
-        },
-        "analysis": {
-            "readability_score": 82,
-            "readability_status": "Legible",
-            "sharpness": {"laplacian_variance": 180.0, "sharpness_status": "Adequate"},
-            "average_font_height_px": 24,
-            "average_ocr_confidence": 91
-        },
-        "evidence": {
-            "sha256_hash": "SHA256-8B1C3D5E7F9A0B2C4D6E8F0A1B3C5D7E9F1A2B4C6D8E0F2A4B6C8D0E2F4A6B8C",
-            "integrity_status": "VERIFIED_TAMPER_EVIDENT",
-            "base64_evidence": None
-        },
-        "officer_remarks": "Infraction Notice drafted under Rule 6(1)(e) & Section 36 of Legal Metrology Act."
-    }
-]
+inspections_db = []
 
-reports_db = [
-    {
-        "report_id": "REP-2026-001",
-        "inspection_id": "INS-2026-001",
-        "product_name": "Parle-G Original Gluco Biscuits 800g",
-        "manufacturer": "Parle Products Pvt. Ltd., Vile Parle East, Mumbai, MH - 400057",
-        "date": "2026-09-08T11:20:00Z",
-        "compliance_score": 96.5,
-        "status": "Compliant",
-        "violations_count": 0
-    },
-    {
-        "report_id": "REP-2026-002",
-        "inspection_id": "INS-2026-002",
-        "product_name": "Aashirvaad Superior MP Shuddh Chakki Atta 5kg",
-        "manufacturer": "ITC Limited, 37 J.L. Nehru Road, Kolkata - 700071",
-        "date": "2026-09-09T15:45:00Z",
-        "compliance_score": 68.0,
-        "status": "Potentially Non-Compliant",
-        "violations_count": 2
-    }
-]
-
+reports_db = []
 
 class MockDB:
     @staticmethod
@@ -352,7 +215,8 @@ class MockDB:
         return enriched
 
     @staticmethod
-    def get_dashboard_stats(officer_id: str):
+    def get_dashboard_stats(officer_id: str = None):
+        inspections = list(inspections_db)
         inspections = MockDB.get_inspections()
         total = len(inspections)
         compliant = sum(1 for i in inspections if i.get("status") == "Compliant")
@@ -467,6 +331,12 @@ class MockDB:
             "violation_types": violation_types,
             "recent_scans": recent_scans
         }
+
+    @staticmethod
+    def clear_all():
+        inspections_db.clear()
+        reports_db.clear()
+        return {"status": "cleared"}
 
     # ================================================================
     # PDF Report Storage Methods
