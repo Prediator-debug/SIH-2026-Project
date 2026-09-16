@@ -1,15 +1,22 @@
 import { NextResponse } from 'next/server';
 import { fetchBackend } from '@/lib/api-client';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
   try {
+    const authHeader = request.headers.get('authorization');
+    const headers: Record<string, string> = {};
+    if (authHeader) headers['Authorization'] = authHeader;
+
     const res = await fetchBackend(`/api/inspections/${id}/report`, {
       cache: 'no-store',
       timeoutMs: 4000,
+      headers,
     });
 
     if (res.ok) {
