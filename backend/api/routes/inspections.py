@@ -12,6 +12,10 @@ from datetime import datetime
 router = APIRouter()
 rule_engine = LegalMetrologyRuleEngine()
 
+@router.delete("/clear")
+def clear_all_inspections():
+    return db.clear_all()
+
 @router.post("")
 @router.post("/")
 def create_inspection(req: InspectionCreate, current_user: TokenData = Depends(get_current_officer)):
