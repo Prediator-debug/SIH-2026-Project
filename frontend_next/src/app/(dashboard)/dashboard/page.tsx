@@ -31,10 +31,12 @@ import {
   RefreshCw,
   Award
 } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const COLORS = ["#6366f1", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6", "#06b6d4"];
 
 export default function DashboardPage() {
+  const { t } = useLanguage();
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -42,14 +44,14 @@ export default function DashboardPage() {
   const fetchDashboardData = async () => {
     try {
       setLoading(true);
-      const res = await fetch("/api/dashboard");
+      const res = await fetch(`/api/dashboard?t=${Date.now()}`, { cache: 'no-store' });
       if (!res.ok) throw new Error("Failed to load dashboard data");
       const json = await res.json();
       setData(json);
       setError("");
     } catch (err: any) {
       console.error(err);
-      setError("Unable to connect to Legal Metrology backend service.");
+      setError(t('unable_connect_backend'));
     } finally {
       setLoading(false);
     }
@@ -77,7 +79,7 @@ export default function DashboardPage() {
 
   const stats = [
     {
-      title: "Total Inspections",
+      title: t('total_inspections'),
       value: totalScans.toLocaleString(),
       trend: trends.total_scans,
       isPositive: true,
@@ -86,7 +88,7 @@ export default function DashboardPage() {
       bg: "bg-indigo-500/10 border-indigo-500/20",
     },
     {
-      title: "Compliance Rate",
+      title: t('compliance_rate'),
       value: `${complianceRate}%`,
       trend: trends.compliance_rate,
       isPositive: true,
@@ -95,7 +97,7 @@ export default function DashboardPage() {
       bg: "bg-emerald-500/10 border-emerald-500/20",
     },
     {
-      title: "Active Violations",
+      title: t('active_violations'),
       value: activeViolations.toLocaleString(),
       trend: trends.active_violations,
       isPositive: false,
@@ -104,7 +106,7 @@ export default function DashboardPage() {
       bg: "bg-rose-500/10 border-rose-500/20",
     },
     {
-      title: "Products Cataloged",
+      title: t('products_cataloged'),
       value: productsScanned.toLocaleString(),
       trend: trends.products_scanned,
       isPositive: true,
@@ -121,15 +123,15 @@ export default function DashboardPage() {
         <div>
           <div className="flex items-center gap-3">
             <h1 className="text-2xl sm:text-3xl font-extrabold text-[#0B2559] tracking-tight">
-              Enforcement Dashboard
+              {t('enforcement_dashboard')}
             </h1>
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100 border border-emerald-300 text-emerald-800">
               <ShieldCheck className="w-3.5 h-3.5 text-emerald-700" />
-              PCR 2011 Rule Engine Live
+              {t('rule_engine_live')}
             </span>
           </div>
           <p className="text-gray-600 text-sm mt-1 font-medium">
-            Department of Consumer Affairs • Legal Metrology (Packaged Commodities) Rules Enforcement Portal
+            {t('dashboard_subtitle')}
           </p>
         </div>
 
@@ -138,7 +140,7 @@ export default function DashboardPage() {
             onClick={fetchDashboardData}
             disabled={loading}
             className="p-2.5 rounded-xl border border-gray-300 bg-white text-slate-700 hover:bg-gray-100 transition-colors shadow-2xs"
-            title="Refresh Data"
+            title={t('refresh_data')}
           >
             <RefreshCw className={`w-4 h-4 text-[#0B2559] ${loading ? 'animate-spin' : ''}`} />
           </button>
@@ -147,7 +149,7 @@ export default function DashboardPage() {
             className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#0B2559] hover:bg-[#07193d] text-white font-bold text-sm shadow-md transition-all"
           >
             <PlusCircle className="w-4 h-4 text-amber-400" />
-            New Inspection Scan
+            {t('new_inspection_scan')}
           </Link>
         </div>
       </div>
@@ -155,7 +157,9 @@ export default function DashboardPage() {
       {error && (
         <div className="p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-sm font-medium flex items-center justify-between">
           <span>{error}</span>
-          <button onClick={fetchDashboardData} className="underline text-xs hover:text-slate-900 font-bold">Retry</button>
+          <button onClick={fetchDashboardData} className="underline text-xs hover:text-slate-900 font-bold">
+            {t('retry')}
+          </button>
         </div>
       )}
 
@@ -191,7 +195,7 @@ export default function DashboardPage() {
                 <span className={`font-bold ${stat.isPositive ? 'text-emerald-700' : 'text-rose-700'}`}>
                   {stat.trend}
                 </span>
-                <span className="text-gray-500 ml-1.5 font-medium">vs past 30 days</span>
+                <span className="text-gray-500 ml-1.5 font-medium">{t('vs_past_30_days')}</span>
               </div>
             </div>
           );
@@ -204,12 +208,12 @@ export default function DashboardPage() {
         <div className="lg:col-span-2 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h2 className="text-lg font-bold text-[#0B2559]">Compliance Progression Trend</h2>
-              <p className="text-xs text-gray-600 mt-0.5 font-medium">12-Month field audit compliance score trajectory</p>
+              <h2 className="text-lg font-bold text-[#0B2559]">{t('compliance_progression_trend')}</h2>
+              <p className="text-xs text-gray-600 mt-0.5 font-medium">{t('trend_subtitle')}</p>
             </div>
             <div className="flex items-center gap-2">
               <span className="text-xs px-2.5 py-1 rounded-md bg-blue-50 border border-blue-200 text-[#0B2559] font-mono font-bold">
-                Avg: {complianceRate}%
+                {t('avg')}: {complianceRate}%
               </span>
             </div>
           </div>
@@ -240,7 +244,7 @@ export default function DashboardPage() {
                   <Area
                     type="monotone"
                     dataKey="compliance_rate"
-                    name="Compliance %"
+                    name={t('compliance_percent')}
                     stroke="#0B2559"
                     strokeWidth={3}
                     fillOpacity={1}
@@ -252,8 +256,8 @@ export default function DashboardPage() {
           ) : (
             <div className="h-[290px] w-full flex flex-col items-center justify-center text-center p-6 border border-dashed border-gray-200 rounded-xl">
               <ScanLine className="w-10 h-10 text-gray-400 mb-2" />
-              <p className="text-sm font-semibold text-slate-800">No monthly audit trends yet</p>
-              <p className="text-xs text-gray-500 mt-1">Conducted field inspections will plot compliance trajectory over time.</p>
+              <p className="text-sm font-semibold text-slate-800">{t('no_monthly_trends')}</p>
+              <p className="text-xs text-gray-500 mt-1">{t('conducted_inspections_hint')}</p>
             </div>
           )}
         </div>
@@ -261,8 +265,8 @@ export default function DashboardPage() {
         {/* Violation Breakdown Donut Chart */}
         <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm flex flex-col">
           <div className="mb-4">
-            <h2 className="text-lg font-bold text-[#0B2559]">Statutory Infractions</h2>
-            <p className="text-xs text-gray-600 mt-0.5 font-medium">Violations logged by Legal Metrology rule</p>
+            <h2 className="text-lg font-bold text-[#0B2559]">{t('statutory_infractions')}</h2>
+            <p className="text-xs text-gray-600 mt-0.5 font-medium">{t('violations_logged_rule')}</p>
           </div>
 
           {violationTypes.length > 0 ? (
@@ -308,8 +312,8 @@ export default function DashboardPage() {
           ) : (
             <div className="h-[220px] w-full flex flex-col items-center justify-center text-center p-6 border border-dashed border-gray-200 rounded-xl my-auto">
               <ShieldCheck className="w-10 h-10 text-emerald-600/60 mb-2" />
-              <p className="text-sm font-semibold text-slate-800">No active violations recorded</p>
-              <p className="text-xs text-gray-500 mt-1">Statutory infractions will appear here upon inspection evaluation.</p>
+              <p className="text-sm font-semibold text-slate-800">{t('no_active_violations')}</p>
+              <p className="text-xs text-gray-500 mt-1">{t('violations_appear_hint')}</p>
             </div>
           )}
         </div>
@@ -320,8 +324,8 @@ export default function DashboardPage() {
         {/* Compliance by Category */}
         <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
           <div className="mb-6">
-            <h2 className="text-lg font-bold text-[#0B2559]">Category Verification</h2>
-            <p className="text-xs text-gray-600 mt-0.5 font-medium">Compliant vs violation audits per commodity sector</p>
+            <h2 className="text-lg font-bold text-[#0B2559]">{t('category_verification')}</h2>
+            <p className="text-xs text-gray-600 mt-0.5 font-medium">{t('category_subtitle')}</p>
           </div>
 
           {categoryData.length > 0 ? (
@@ -340,16 +344,16 @@ export default function DashboardPage() {
                     }}
                   />
                   <Legend wrapperStyle={{ color: "#475569", fontSize: "0.8rem", paddingTop: "8px" }} />
-                  <Bar dataKey="compliant" name="Compliant" stackId="a" fill="#10b981" radius={[0, 0, 4, 4]} />
-                  <Bar dataKey="non_compliant" name="Violations" stackId="a" fill="#ef4444" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="compliant" name={t('compliant')} stackId="a" fill="#10b981" radius={[0, 0, 4, 4]} />
+                  <Bar dataKey="non_compliant" name={t('violations')} stackId="a" fill="#ef4444" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
           ) : (
             <div className="h-[280px] w-full flex flex-col items-center justify-center text-center p-6 border border-dashed border-gray-200 rounded-xl">
               <Package className="w-10 h-10 text-gray-400 mb-2" />
-              <p className="text-sm font-semibold text-slate-800">No category audit records</p>
-              <p className="text-xs text-gray-500 mt-1">Audit counts per commodity category will be charted here.</p>
+              <p className="text-sm font-semibold text-slate-800">{t('no_category_records')}</p>
+              <p className="text-xs text-gray-500 mt-1">{t('category_appear_hint')}</p>
             </div>
           )}
         </div>
@@ -358,14 +362,14 @@ export default function DashboardPage() {
         <div className="lg:col-span-2 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm flex flex-col">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h2 className="text-lg font-bold text-[#0B2559]">Recent Inspections Log</h2>
-              <p className="text-xs text-gray-600 mt-0.5 font-medium">Commodities evaluated under Section 6 declarations</p>
+              <h2 className="text-lg font-bold text-[#0B2559]">{t('recent_inspections_log')}</h2>
+              <p className="text-xs text-gray-600 mt-0.5 font-medium">{t('recent_inspections_subtitle')}</p>
             </div>
             <Link
               href="/inspections"
               className="text-xs font-bold text-[#0B2559] hover:underline flex items-center gap-1 transition-colors"
             >
-              View Full History <ChevronRight className="w-3.5 h-3.5" />
+              {t('view_full_history')} <ChevronRight className="w-3.5 h-3.5" />
             </Link>
           </div>
 
@@ -373,12 +377,12 @@ export default function DashboardPage() {
             <table className="w-full text-left text-sm text-slate-800">
               <thead className="text-xs uppercase text-gray-600 bg-gray-50 border-b border-gray-200 font-bold">
                 <tr>
-                  <th className="px-4 py-3 font-bold">Inspection ID</th>
-                  <th className="px-4 py-3 font-bold">Product Name</th>
-                  <th className="px-4 py-3 font-bold">Category</th>
-                  <th className="px-4 py-3 font-bold">Date</th>
-                  <th className="px-4 py-3 font-bold text-center">Score</th>
-                  <th className="px-4 py-3 font-bold text-center">Status</th>
+                  <th className="px-4 py-3 font-bold">{t('col_inspection_id')}</th>
+                  <th className="px-4 py-3 font-bold">{t('col_product_name')}</th>
+                  <th className="px-4 py-3 font-bold">{t('col_category')}</th>
+                  <th className="px-4 py-3 font-bold">{t('col_date')}</th>
+                  <th className="px-4 py-3 font-bold text-center">{t('col_score')}</th>
+                  <th className="px-4 py-3 font-bold text-center">{t('col_status')}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
@@ -412,7 +416,7 @@ export default function DashboardPage() {
                                 : "bg-rose-50 text-rose-800 border-rose-300"
                             }`}
                           >
-                            {isCompliant ? "Compliant" : "Non-Compliant"}
+                            {isCompliant ? t('status_compliant') : t('status_non_compliant')}
                           </span>
                         </td>
                       </tr>
@@ -421,7 +425,7 @@ export default function DashboardPage() {
                 ) : (
                   <tr>
                     <td colSpan={6} className="px-4 py-12 text-center text-gray-500 text-sm">
-                      No inspection records yet. Perform an AI scan to log your first inspection.
+                      {t('no_inspections_yet')}
                     </td>
                   </tr>
                 )}
